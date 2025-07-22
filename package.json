@@ -1,0 +1,67 @@
+{
+  "name": "@vela-ventures/vento-sdk",
+  "version": "1.0.0",
+  "description": "Vento SDK for AO dex aggregator - works in Node.js and browsers",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "ao",
+    "dex",
+    "swap",
+    "swap",
+    "arweave",
+    "typescript",
+    "sdk",
+    "defi",
+    "permaswap",
+    "botega"
+  ],
+  "author": {
+    "name": "vela-ventures",
+    "email": "admin@vela.ventures",
+    "url": "https://vela.ventures/"
+  },
+  "contributors": [
+    "Artem Purundzhian <artempa1607@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/vento/ao-dex-sdk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vento/ao-dex-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vento/ao-dex-sdk/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "rimraf": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@permaweb/aoconnect": "^0.0.57"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
