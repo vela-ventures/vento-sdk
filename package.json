@@ -38,13 +38,13 @@
     "Artem Purundzhian <artempa1607@gmail.com>"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/vento/ao-dex-sdk",
+  "homepage": "https://github.com/vela-ventures/vento-sdk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vento/ao-dex-sdk.git"
+    "url": "https://github.com/vela-ventures/vento-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/vento/ao-dex-sdk/issues"
+    "url": "https://github.com/vela-ventures/vento-sdk/issues"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
