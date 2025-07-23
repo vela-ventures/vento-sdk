@@ -17,7 +17,7 @@ export class VentoClient {
   private signer?: any;
 
   constructor(config: SDKConfig = {}) {
-    this.apiBaseUrl = config.apiBaseUrl || 'https://api.ventoswap.com/';
+    this.apiBaseUrl = config.apiBaseUrl || 'https://api.ventoswap.com';
     this.timeout = config.timeout || 30000;
     this.signer = config.signer;
   }
@@ -169,7 +169,7 @@ export class VentoClient {
     const headers: Record<string, string> = {};
     
     if (typeof window === 'undefined') {
-      headers['User-Agent'] = 'ao-dex-sdk/1.0.1';
+      headers['User-Agent'] = 'ao-dex-sdk/1.0.2';
     }
     
     return headers;
