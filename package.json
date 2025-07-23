@@ -1,6 +1,6 @@
 {
   "name": "@vela-ventures/vento-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vento SDK for AO dex aggregator - works in Node.js and browsers",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
