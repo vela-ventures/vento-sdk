@@ -22,7 +22,6 @@ const signer = createSigner(window.arweaveWallet);
 
 // Initialize client
 const client = new VentoClient({
-  apiBaseUrl: 'https://your-api-endpoint.com',
   signer
 });
 
@@ -57,9 +56,7 @@ console.log('Swap completed:', result.messageId);
 import { VentoClient } from '@vela-ventures/vento-sdk';
 
 // Initialize without signer for read operations
-const client = new VentoClient({
-  apiBaseUrl: 'http://localhost:3000'
-});
+const client = new VentoClient();
 
 // Get pools
 const pools = await client.getPools();

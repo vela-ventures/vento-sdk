@@ -12,12 +12,12 @@ import type {
 } from './types';
 
 export class VentoClient {
-  private apiBaseUrl: string;
+  private apiBaseUrl?: string;
   private timeout: number;
   private signer?: any;
 
   constructor(config: SDKConfig = {}) {
-    this.apiBaseUrl = config.apiBaseUrl || 'http://localhost:3000';
+    this.apiBaseUrl = config.apiBaseUrl || 'https://api.ventoswap.com/';
     this.timeout = config.timeout || 30000;
     this.signer = config.signer;
   }
