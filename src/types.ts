@@ -35,6 +35,8 @@ export interface Route {
   hops: number;
   estimatedOutput?: number;
   estimatedFee?: number;
+  intermediateOutput?: number;
+  intermediateTokenId?: string;
   error?: string;
 }
 
@@ -67,7 +69,7 @@ export interface SwapMessageResponse {
   minAmount: number;
   userAddress: string;
   timestamp: number;
-  status: 'unsigned' | 'ready_to_sign';
+  status: "unsigned" | "ready_to_sign";
   orderIds?: string[];
   orderStatusData?: any[];
 }
@@ -95,4 +97,4 @@ export interface SwapResult {
 export interface ApiError extends Error {
   status?: number;
   response?: any;
-} 
+}
