@@ -2,6 +2,7 @@ import type {
   SDKConfig,
   SwapQuoteRequest,
   SwapQuoteResponse,
+  SwapStatusResponse,
   SwapMessageRequest,
   SwapMessageResponse,
   PoolData,
@@ -28,6 +29,10 @@ export class VentoClient {
 
   async getSwapQuote(request: SwapQuoteRequest): Promise<SwapQuoteResponse> {
     return this.request('POST', '/swap/quote', request);
+  }
+
+  async getSwapStatus(swapId: string): Promise<SwapStatusResponse> {
+    return this.request('GET', `/swap/status?swapId=${encodeURIComponent(swapId)}`);
   }
 
   async getPools(forceRefresh = false): Promise<PoolData> {

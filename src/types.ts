@@ -22,6 +22,12 @@ export interface SwapQuoteResponse {
   executionTime: number;
 }
 
+export interface SwapStatusResponse {
+  swapId: string;
+  status: string;
+  [key: string]: any;
+}
+
 export interface RoutePool {
   poolId: string;
   tokenIn: string;

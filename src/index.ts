@@ -3,6 +3,7 @@ export type {
   SDKConfig,
   SwapQuoteRequest,
   SwapQuoteResponse,
+  SwapStatusResponse,
   SwapMessageRequest,
   SwapMessageResponse,
   RoutePool,
