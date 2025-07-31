@@ -174,7 +174,7 @@ export class VentoClient {
     const headers: Record<string, string> = {};
     
     if (typeof window === 'undefined') {
-      headers['User-Agent'] = 'ao-dex-sdk/1.0.2';
+      headers['User-Agent'] = 'ao-dex-sdk/1.0.3';
     }
     
     return headers;
