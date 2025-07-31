@@ -42,6 +42,7 @@ export interface Route {
   estimatedOutput?: number;
   estimatedFee?: number;
   intermediateOutput?: number;
+  intermediateEstimatedFee?: number;
   intermediateTokenId?: string;
   error?: string;
 }
