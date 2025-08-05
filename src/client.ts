@@ -23,7 +23,6 @@ export class VentoClient {
     this.apiBaseUrl = config.apiBaseUrl || 'https://api.ventoswap.com';
     this.timeout = config.timeout || 30000;
     this.signer = config.signer;
-    console.log("local version")
   }
 
   async getHealth(): Promise<{ status: string; message: string; timestamp: string }> {
@@ -181,7 +180,7 @@ export class VentoClient {
     const headers: Record<string, string> = {};
     
     if (typeof window === 'undefined') {
-      headers['User-Agent'] = 'ao-dex-sdk/1.0.5';
+      headers['User-Agent'] = 'ao-dex-sdk/1.0.6';
     }
     
     return headers;
