@@ -50,6 +50,23 @@ const result = await client.executeSwap(
 console.log('Swap completed:', result.messageId);
 ```
 
+### Reverse Quote (Find Best Route for Desired Output)
+
+```javascript
+// Find the best route to get exactly 100 Token B
+const reverseQuote = await client.getReverseQuote({
+  fromTokenId: 'tokenA',
+  toTokenId: 'tokenB', 
+  desiredOutput: 100000000000000, // 100 tokens (raw amount)
+  userAddress: 'your-address'
+});
+
+console.log(`Best route requires ${reverseQuote.bestRoute?.inputWithFee} Token A`);
+console.log(`Found ${reverseQuote.routes.length} possible routes`);
+```
+
+> 📖 See [REVERSE_QUOTE.md](./REVERSE_QUOTE.md) for detailed documentation and examples.
+
 ### Node.js Usage
 
 ```javascript
@@ -92,7 +109,8 @@ new VentoClient({ apiBaseUrl?, timeout?, signer? })
 ### Methods
 
 #### Core Methods
-- `getSwapQuote(request)` - Get swap quotes
+- `getSwapQuote(request)` - Get swap quotes for input amount
+- `getReverseQuote(request)` - Get quotes for desired output amount ✨ **NEW**
 - `executeSwap(route, fromTokenId, toTokenId, amount, minAmount, userAddress)` - Execute swap
 - `prepareSwapMessage(request)` - Prepare unsigned message
 - `signAndSendMessage(unsignedMessage)` - Sign and send message

@@ -28,6 +28,32 @@ export interface SwapStatusResponse {
   [key: string]: any;
 }
 
+export interface ReverseQuoteRequest {
+  fromTokenId: string;
+  toTokenId: string;
+  desiredOutput: number;
+  userAddress?: string;
+}
+
+export interface ReverseQuoteResponse {
+  fromTokenId: string;
+  toTokenId: string;
+  desiredOutput: number;
+  routes: RouteWithReverseEstimate[];
+  bestRoute: RouteWithReverseEstimate | null;
+  totalRoutesFound: number;
+  validRoutesWithEstimates: number;
+  executionTime: number;
+}
+
+export interface RouteWithReverseEstimate extends Route {
+  requiredInput: number;
+  estimatedFee: number;
+  inputWithFee: number;
+  intermediateInputRequired?: number;
+  intermediateEstimatedFee?: number;
+}
+
 export interface RoutePool {
   poolId: string;
   tokenIn: string;
