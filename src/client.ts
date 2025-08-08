@@ -53,7 +53,7 @@ export class VentoClient {
   async getBestRoute(
     fromTokenId: string,
     toTokenId: string,
-    amount: number,
+    amount: string,
     userAddress?: string
   ): Promise<RouteWithEstimate | null> {
     const quote = await this.getSwapQuote({
@@ -70,8 +70,8 @@ export class VentoClient {
     route: RouteWithEstimate,
     fromTokenId: string,
     toTokenId: string,
-    amount: number,
-    minAmount: number,
+    amount: string,
+    minAmount: string,
     userAddress: string
   ): Promise<SwapResult> {
     if (!this.signer) {
@@ -115,8 +115,19 @@ export class VentoClient {
     }
   }
 
-  static calculateMinAmount(estimatedOutput: number, slippagePercent: number): number {
-    return Math.floor(estimatedOutput * (1 - slippagePercent / 100));
+  static calculateMinAmount(estimatedOutput: string, slippagePercent: number): string {
+    const out = VentoClient.toBigInt(estimatedOutput);
+    const bps = Math.round(slippagePercent * 100);
+    const numer = BigInt(10000 - bps);
+    const denom = BigInt(10000);
+    return ((out * numer) / denom).toString();
+  }
+
+  private static toBigInt(value: string): bigint {
+    if (!/^[0-9]+$/.test(value)) {
+      throw new Error(`Invalid integer string: ${value}`);
+    }
+    return BigInt(value);
   }
 
   async hasValidPair(fromTokenId: string, toTokenId: string): Promise<boolean> {
@@ -124,7 +135,7 @@ export class VentoClient {
       const quote = await this.getSwapQuote({
         fromTokenId,
         toTokenId,
-        amount: 1,
+        amount: '1',
       });
       
       return quote.routes.length > 0;

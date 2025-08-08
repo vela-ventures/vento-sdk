@@ -7,14 +7,14 @@ export interface SDKConfig {
 export interface SwapQuoteRequest {
   fromTokenId: string;
   toTokenId: string;
-  amount: number;
+  amount: string;
   userAddress?: string;
 }
 
 export interface SwapQuoteResponse {
   fromTokenId: string;
   toTokenId: string;
-  inputAmount: number;
+  inputAmount: string;
   routes: RouteWithEstimate[];
   bestRoute: RouteWithEstimate | null;
   totalRoutesFound: number;
@@ -31,14 +31,14 @@ export interface SwapStatusResponse {
 export interface ReverseQuoteRequest {
   fromTokenId: string;
   toTokenId: string;
-  desiredOutput: number;
+  desiredOutput: string;
   userAddress?: string;
 }
 
 export interface ReverseQuoteResponse {
   fromTokenId: string;
   toTokenId: string;
-  desiredOutput: number;
+  desiredOutput: string;
   routes: RouteWithReverseEstimate[];
   bestRoute: RouteWithReverseEstimate | null;
   totalRoutesFound: number;
@@ -47,11 +47,11 @@ export interface ReverseQuoteResponse {
 }
 
 export interface RouteWithReverseEstimate extends Route {
-  requiredInput: number;
-  estimatedFee: number;
-  inputWithFee: number;
-  intermediateInputRequired?: number;
-  intermediateEstimatedFee?: number;
+  requiredInput: string;
+  estimatedFee: string;
+  inputWithFee: string;
+  intermediateInputRequired?: string;
+  intermediateEstimatedFee?: string;
 }
 
 export interface RoutePool {
@@ -65,17 +65,17 @@ export interface Route {
   dex: "botega" | "permaswap";
   pools: RoutePool[];
   hops: number;
-  estimatedOutput?: number;
-  estimatedFee?: number;
-  intermediateOutput?: number;
-  intermediateEstimatedFee?: number;
+  estimatedOutput?: string;
+  estimatedFee?: string;
+  intermediateOutput?: string;
+  intermediateEstimatedFee?: string;
   intermediateTokenId?: string;
   error?: string;
 }
 
 export interface RouteWithEstimate extends Route {
-  estimatedOutput: number;
-  estimatedFee: number;
+  estimatedOutput: string;
+  estimatedFee: string;
 }
 
 export interface UnsignedMessage {
@@ -88,8 +88,8 @@ export interface SwapMessageRequest {
   route: RouteWithEstimate;
   fromTokenId: string;
   toTokenId: string;
-  amount: number;
-  minAmount: number;
+  amount: string;
+  minAmount: string;
   userAddress: string;
 }
 
@@ -98,8 +98,8 @@ export interface SwapMessageResponse {
   route: RouteWithEstimate;
   fromTokenId: string;
   toTokenId: string;
-  amount: number;
-  minAmount: number;
+  amount: string;
+  minAmount: string;
   userAddress: string;
   timestamp: number;
   status: "unsigned" | "ready_to_sign";
