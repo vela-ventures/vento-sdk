@@ -56,12 +56,16 @@
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
-    "@permaweb/aoconnect": "^0.0.85"
+    "@permaweb/aoconnect": "^0.0.85",
+    "ethers": "^6.15.0"
   },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@dha-team/arbundles": "^1.0.3"
   }
 }

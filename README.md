@@ -13,8 +13,8 @@ npm install @vela-ventures/vento-sdk
 ### Browser Usage
 
 ```javascript
-import { VentoClient } from '@vela-ventures/vento-sdk';
-import { createSigner } from '@permaweb/aoconnect';
+import { VentoClient } from "@vela-ventures/vento-sdk";
+import { createSigner } from "@permaweb/aoconnect";
 
 // Connect wallet and create signer
 await window.arweaveWallet.connect();
@@ -22,7 +22,7 @@ const signer = createSigner(window.arweaveWallet);
 
 // Initialize client
 const client = new VentoClient({
-  signer
+  signer,
 });
 
 // Get user address
@@ -30,14 +30,17 @@ const userAddress = await window.arweaveWallet.getActiveAddress();
 
 // Get swap quote
 const quote = await client.getSwapQuote({
-  fromTokenId: '0syT13r0s0tgPmIed95bJnuSqaD29HQNN8D3ElLSrsc', // AO
-  toTokenId: 'xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10',   // wAR
+  fromTokenId: "0syT13r0s0tgPmIed95bJnuSqaD29HQNN8D3ElLSrsc", // AO
+  toTokenId: "xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10", // wAR
   amount: 1000000000000,
-  userAddress
+  userAddress,
 });
 
 // Execute swap
-const minAmount = VentoClient.calculateMinAmount(quote.bestRoute.estimatedOutput, 1);
+const minAmount = VentoClient.calculateMinAmount(
+  quote.bestRoute.estimatedOutput,
+  1
+);
 const result = await client.executeSwap(
   quote.bestRoute,
   quote.fromTokenId,
@@ -47,30 +50,13 @@ const result = await client.executeSwap(
   userAddress
 );
 
-console.log('Swap completed:', result.messageId);
+console.log("Swap completed:", result.messageId);
 ```
-
-### Reverse Quote (Find Best Route for Desired Output)
-
-```javascript
-// Find the best route to get exactly 100 Token B
-const reverseQuote = await client.getReverseQuote({
-  fromTokenId: 'tokenA',
-  toTokenId: 'tokenB', 
-  desiredOutput: 100000000000000, // 100 tokens (raw amount)
-  userAddress: 'your-address'
-});
-
-console.log(`Best route requires ${reverseQuote.bestRoute?.inputWithFee} Token A`);
-console.log(`Found ${reverseQuote.routes.length} possible routes`);
-```
-
-> 📖 See [REVERSE_QUOTE.md](./REVERSE_QUOTE.md) for detailed documentation and examples.
 
 ### Node.js Usage
 
 ```javascript
-import { VentoClient } from '@vela-ventures/vento-sdk';
+import { VentoClient } from "@vela-ventures/vento-sdk";
 
 // Initialize without signer for read operations
 const client = new VentoClient();
@@ -80,22 +66,89 @@ const pools = await client.getPools();
 
 // Get quotes
 const quote = await client.getSwapQuote({
-  fromTokenId: 'token1',
-  toTokenId: 'token2',
+  fromTokenId: "token1",
+  toTokenId: "token2",
   amount: 1000000,
-  userAddress: 'user-address'
+  userAddress: "user-address",
 });
 
 // Prepare message for external signing
-const minAmount = VentoClient.calculateMinAmount(quote.bestRoute.estimatedOutput, 1);
+const minAmount = VentoClient.calculateMinAmount(
+  quote.bestRoute.estimatedOutput,
+  1
+);
 const messageResponse = await client.prepareSwapMessage({
   route: quote.bestRoute,
-  fromTokenId: 'token1',
-  toTokenId: 'token2',
+  fromTokenId: "token1",
+  toTokenId: "token2",
   amount: 1000000,
   minAmount,
-  userAddress: 'user-address'
+  userAddress: "user-address",
 });
+```
+
+## Vento Bridge
+
+### Arweave (AR) ↔ vAR (AO)
+
+```javascript
+import { VentoClient, BridgeAssets } from "@vela-ventures/vento-sdk";
+import { createSigner } from "@permaweb/aoconnect";
+
+const ARWEAVE_WALLET = JSON.parse(JWK_STRING);
+
+const client = new VentoClient({
+  signer: createSigner(ARWEAVE_WALLET),
+  arweaveWallet: ARWEAVE_WALLET,
+});
+
+// lockup AR and mint vAR
+await client.bridge.mint({
+  asset: BridgeAssets.vAR,
+  amount: "1000000000000", // in winstons
+  destinationAddress: "ao-address", // recipient of vAR
+});
+
+// burn vAR and redeem AR
+await client.bridge.burn({
+  asset: BridgeAssets.vAR,
+  amount: "1000000000000", // in winstons
+  destinationAddress: "arweave-address", // recipient of AR
+});
+```
+
+### USDC (ETH) ↔ vUSDC (AO)
+
+```javascript
+import { VentoClient, BridgeAssets } from '@vela-ventures/vento-sdk'
+import { createSigner } from '@permaweb/aoconnect'
+import { JsonRpcProvider, Wallet, parseUnits } from 'ethers'
+
+const ARWEAVE_WALLET = JSON.parse(JWK_STRING)
+
+const ethProvider = const provider = new JsonRpcProvider(
+  "https://mainnet.infura.io/v3/<infura-project-id>"
+);
+const ethWallet = new Wallet(ETH_PRIVATE_KEY, provider);
+
+const client = new VentoClient({
+  signer: createSigner(ARWEAVE_WALLET),
+  ethSigner: ethWallet
+})
+
+// lockup USDC and mint vUSDC
+await client.bridge.mint({
+  asset: BridgeAssets.vUSDC,
+  amount: parseUnits("15", 6),
+  destinationAddress: 'ao-address' // recipient of vUSDC
+})
+
+// burn vUSDC and redeem USDC
+await client.bridge.burn({
+  asset: BridgeAssets.vUSDC,
+  amount: parseUnits("10", 6),
+  destinationAddress: 'eth-address' // recipient of USDC
+})
 ```
 
 ## API Reference
@@ -106,9 +159,29 @@ const messageResponse = await client.prepareSwapMessage({
 new VentoClient({ apiBaseUrl?, timeout?, signer? })
 ```
 
+### Reverse Quote (Find Best Route for Desired Output)
+
+```javascript
+// Find the best route to get exactly 100 Token B
+const reverseQuote = await client.getReverseQuote({
+  fromTokenId: "tokenA",
+  toTokenId: "tokenB",
+  desiredOutput: 100000000000000, // 100 tokens (raw amount)
+  userAddress: "your-address",
+});
+
+console.log(
+  `Best route requires ${reverseQuote.bestRoute?.inputWithFee} Token A`
+);
+console.log(`Found ${reverseQuote.routes.length} possible routes`);
+```
+
+> 📖 See [REVERSE_QUOTE.md](./REVERSE_QUOTE.md) for detailed documentation and examples.
+
 ### Methods
 
 #### Core Methods
+
 - `getSwapQuote(request)` - Get swap quotes for input amount
 - `getReverseQuote(request)` - Get quotes for desired output amount ✨ **NEW**
 - `executeSwap(route, fromTokenId, toTokenId, amount, minAmount, userAddress)` - Execute swap
@@ -116,6 +189,7 @@ new VentoClient({ apiBaseUrl?, timeout?, signer? })
 - `signAndSendMessage(unsignedMessage)` - Sign and send message
 
 #### Utility Methods
+
 - `getPools(forceRefresh?)` - Get available pools
 - `getBestRoute(fromTokenId, toTokenId, amount, userAddress?)` - Get best route
 - `hasValidPair(fromTokenId, toTokenId)` - Check if pair exists
@@ -124,11 +198,13 @@ new VentoClient({ apiBaseUrl?, timeout?, signer? })
 ## Usage Modes
 
 ### With Signer (Full functionality)
+
 ```javascript
 const client = new VentoClient({ signer }); // Can execute swaps
 ```
 
 ### Without Signer (Read-only)
+
 ```javascript
 const client = new VentoClient(); // Can get quotes and prepare messages
 ```
@@ -137,12 +213,19 @@ const client = new VentoClient(); // Can get quotes and prepare messages
 
 ```javascript
 try {
-  const result = await client.executeSwap(route, fromToken, toToken, amount, minAmount, userAddress);
+  const result = await client.executeSwap(
+    route,
+    fromToken,
+    toToken,
+    amount,
+    minAmount,
+    userAddress
+  );
 } catch (error) {
-  if (error.message.includes('No signer provided')) {
-    console.log('Please initialize client with a signer');
+  if (error.message.includes("No signer provided")) {
+    console.log("Please initialize client with a signer");
   } else {
-    console.error('Swap failed:', error.message);
+    console.error("Swap failed:", error.message);
   }
 }
 ```
@@ -164,4 +247,4 @@ try {
 
 ## License
 
-MIT 
+MIT

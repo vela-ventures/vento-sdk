@@ -1,7 +1,11 @@
+import { Wallet as EthSigner } from "ethers";
+
 export interface SDKConfig {
   apiBaseUrl?: string;
   timeout?: number;
   signer?: any;
+  ethSigner?: EthSigner;
+  arweaveWallet?: any;
 }
 
 export interface SwapQuoteRequest {
@@ -130,4 +134,9 @@ export interface SwapResult {
 export interface ApiError extends Error {
   status?: number;
   response?: any;
+}
+
+export enum BridgeAssets {
+  vUSDC = "vUSDC",
+  vAR = "vAR",
 }
