@@ -1,4 +1,4 @@
-export { VentoClient } from './client';
+export { VentoClient } from "./client";
 export type {
   SDKConfig,
   SwapQuoteRequest,
@@ -15,7 +15,8 @@ export type {
   UnsignedMessage,
   SwapResult,
   PoolData,
-  ApiError
-} from './types';
+  ApiError,
+} from "./types";
+export { BridgeAssets } from "./types";
 
-export { VentoClient as default } from './client'; 
+export { VentoClient as default } from "./client";
