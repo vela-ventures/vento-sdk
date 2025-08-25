@@ -140,7 +140,8 @@ const client = new VentoClient({
 await client.bridge.mint({
   asset: BridgeAssets.vUSDC,
   amount: parseUnits("15", 6),
-  destinationAddress: 'ao-address' // recipient of vUSDC
+  destinationAddress: 'ao-address', // recipient of vUSDC
+  includeApproval: true // will call approve on USDC contract
 })
 
 // burn vUSDC and redeem USDC
