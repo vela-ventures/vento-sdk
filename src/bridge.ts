@@ -73,7 +73,7 @@ export class VentoBridge {
     );
     if (BigInt(amount) < minAmount) {
       throw new Error(
-        `Minimum bridge amount is ${minAmount} AR, ${amount} AR provided`
+        `Minimum bridge amount is ${minAmount} ${asset}, ${amount} ${asset} provided`
       );
     }
     if (asset === BridgeAssets.vAR) {
@@ -192,7 +192,7 @@ export class VentoBridge {
     const minAmount = BigInt(config.MININUM_USDC_BRIDGE);
     if (BigInt(amount) < minAmount) {
       throw new Error(
-        `Minimum bridge amount is ${minAmount} AR, ${amount} AR provided`
+        `Minimum bridge amount is ${minAmount} USDC, ${amount} USDC provided`
       );
     }
     const tokenContract = new ETHContract(
