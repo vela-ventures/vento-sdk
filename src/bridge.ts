@@ -141,9 +141,10 @@ export class VentoBridge {
       ],
     });
 
+    const burnDebitNoticeId = await getBurnDebitNoticeId(burnMessage);
+
     return {
-      txid: burnMessage,
-      forProcess: tokenAddress,
+      txid: burnDebitNoticeId,
     };
   }
 
@@ -377,4 +378,67 @@ function isValidEthereumAddress(value: unknown): boolean {
   if (typeof value !== "string") return false;
   const address = value.trim();
   return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+async function getBurnDebitNoticeId(messageId: string, retry = 0) {
+  const result = await fetch("https://arweave.net/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+      query (
+              $messageId: String!
+      ) {
+        transactions(
+          tags: [
+            { name: "Pushed-For", values: [$messageId] }
+            { name: "Data-Protocol", values: ["ao"] }
+          ]
+          ingested_at: { min: 1696107600 }
+        ) {
+          ...MessageFields
+        }
+      }
+  
+      fragment MessageFields on TransactionConnection {
+        edges {
+          cursor
+          node {
+            id
+            tags {
+              name
+              value
+            }
+          }
+        }
+      }`,
+      variables: {
+        messageId: messageId,
+      },
+    }),
+  }).then((res) => res.json());
+
+  const debitNoticeTx = result.data.transactions.edges.find(
+    (tx: any) =>
+      tx.node.tags.findIndex(
+        (t: any) => t.name === "Action" && t.value === "Debit-Notice"
+      ) !== -1
+  );
+
+  if (!debitNoticeTx) {
+    if (retry < 20) {
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          resolve({});
+        }, retry * 5000)
+      );
+      return getBurnDebitNoticeId(messageId, retry + 1);
+    } else {
+      return null;
+    }
+  } else {
+    return debitNoticeTx.node.id;
+  }
 }
