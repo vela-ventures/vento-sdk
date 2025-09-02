@@ -139,4 +139,6 @@ export interface ApiError extends Error {
 export enum BridgeAssets {
   vUSDC = "vUSDC",
   vAR = "vAR",
+  vDAI = "vDAI",
+  vETH = "vETH",
 }

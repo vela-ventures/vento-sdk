@@ -15,7 +15,7 @@ interface ArweaveMintOptions {
 }
 
 interface ERC20MintOptions {
-  asset: BridgeAssets.vUSDC;
+  asset: BridgeAssets.vUSDC | BridgeAssets.vDAI | BridgeAssets.vETH;
   amount: string;
   destinationAddress: string;
   includeApproval?: boolean;
@@ -27,9 +27,13 @@ const ETH_BRIDGE_CONTRACT_ADDRESS =
 const AO_TOKENS = {
   [BridgeAssets.vAR]: "y-p7CPhs6JMUStAuE4KeTnMXN7qYBvEi2hiBFk8ZhjM",
   [BridgeAssets.vUSDC]: "cxkFiGP89fEKOvbvl9SLs1lEaw0L-DWJiqQOuDPeDG8",
+  [BridgeAssets.vDAI]: "Q5Qk5W_AOUou2nRu1RlEpfr8yzKmWJ98tQb8QEyYqx4",
+  [BridgeAssets.vETH]: "SGUZMZ1toA4k5wlDNyDtHQThf1SEAOLNwiE8TzsnSgw",
 };
 const ETH_TOKENS = {
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+  wETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
 };
 
 export class VentoBridge {
@@ -97,6 +101,27 @@ export class VentoBridge {
         AO_TOKENS[BridgeAssets.vUSDC]
       );
     }
+
+    if (asset === BridgeAssets.vDAI) {
+      if (!isValidEthereumAddress(destinationAddress)) {
+        throw new Error("Destination address is not a valid Ethereum address");
+      }
+      return this.burnAOAsset(
+        amount,
+        destinationAddress,
+        AO_TOKENS[BridgeAssets.vDAI]
+      );
+    }
+    if (asset === BridgeAssets.vETH) {
+      if (!isValidEthereumAddress(destinationAddress)) {
+        throw new Error("Destination address is not a valid Ethereum address");
+      }
+      return this.burnAOAsset(
+        amount,
+        destinationAddress,
+        AO_TOKENS[BridgeAssets.vETH]
+      );
+    }
   }
 
   private async burnAOAsset(
@@ -153,27 +178,31 @@ export class VentoBridge {
       return this.mintVAR(config.amount, config.destinationAddress);
     }
     if (config.asset === BridgeAssets.vUSDC) {
-      return this.mintVUSDC(
+      return this.mintWrappedERC20(
         config.amount,
         config.destinationAddress,
-        config.includeApproval
+        ETH_TOKENS.USDC,
+        config.includeApproval || true
+      );
+    }
+    if (config.asset === BridgeAssets.vDAI) {
+      return this.mintWrappedERC20(
+        config.amount,
+        config.destinationAddress,
+        ETH_TOKENS.DAI,
+        config.includeApproval || true
+      );
+    }
+    if (config.asset === BridgeAssets.vETH) {
+      return this.mintWrappedERC20(
+        config.amount,
+        config.destinationAddress,
+        ETH_TOKENS.wETH,
+        config.includeApproval || true
       );
     }
     throw new Error(
       `Minting ${(config as ERC20MintOptions).asset} is not supported`
-    );
-  }
-
-  private async mintVUSDC(
-    amount: string,
-    destinationAddress: string,
-    includeApproval?: boolean
-  ) {
-    return this.mintWrappedERC20(
-      amount,
-      destinationAddress,
-      ETH_TOKENS.USDC,
-      includeApproval || true
     );
   }
 
